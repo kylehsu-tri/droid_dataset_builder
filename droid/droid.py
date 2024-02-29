@@ -59,9 +59,9 @@ def _generate_examples(paths) -> Iterator[Tuple[str, Any]]:
 
                 episode.append({
                     'observation': {
-                        'exterior_image_1_left': obs['image'][f'{exterior_ids[0]}'][..., ::-1],
-                        'exterior_image_2_left': obs['image'][f'{exterior_ids[1]}'][..., ::-1],
-                        'wrist_image_left': obs['image'][f'{wrist_ids[0]}'][..., ::-1],
+                        'exterior_image_1_left': obs['image'][f'{exterior_ids[0]}_left'][..., ::-1],
+                        'exterior_image_2_left': obs['image'][f'{exterior_ids[1]}_left'][..., ::-1],
+                        'wrist_image_left': obs['image'][f'{wrist_ids[0]}_left'][..., ::-1],
                         'cartesian_position': obs['robot_state']['cartesian_position'],
                         'joint_position': obs['robot_state']['joint_positions'],
                         'gripper_position': np.array([obs['robot_state']['gripper_position']]),

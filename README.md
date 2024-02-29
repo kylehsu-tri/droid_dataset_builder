@@ -44,8 +44,10 @@ If your dataset does not define splits, put all file names into the `train` spli
 2.**Modify Dataset Conversion Code**: We currently assume a fixed dummy language instruction for the full dataset. 
 Please modify to use one or multiple appropriate instructions.
 
-That's it! You're all set to run dataset conversion. Inside the dataset directory, run:
+That's it! You're all set to run dataset conversion. Run the following:
 ```
+pip3 install -e .
+cd droid
 tfds build --overwrite
 ```
 The command line output should finish with a summary of the generated dataset (including size and number of samples). 
