@@ -18,14 +18,28 @@ If you want to manually create an environment, the key packages to install are `
 `tensorflow_datasets`, `matplotlib`, `plotly`, `cv2` and `wandb`.
 
 
+## Exporting MP4 Data from the DROID Collection Setup
+
+During teleoperation, DROID stores camera data in ZED's `.svo` data format. For conversion to RLDS we first need 
+to convert these into `.mp4` files. The easiest is to do this directly on the computer that is running the DROID 
+data collection program and controlling the robot, since it already has the necessary [ZED python API](https://www.stereolabs.com/docs/app-development/python/install)
+installed.
+
+On the robot machine, run the [`svo_to_mp4.py`](https://github.com/AlexanderKhazatsky/R2D2/blob/main/scripts/convert/svo_to_mp4.py)
+script. Afterward, you should see `.mp4` video files in your data directory -- check that the videos look as expected. 
+Each video shows both stereo camera views, horizontally concatenated. Next, copy the full data folder to the machine
+on which you want to run RLDS conversion below. If you're running RLDS conversion directly on the robot machine, you
+do not need to copy the data.
+
+
 ## Converting your Own DROID Dataset to RLDS
 
 You can modify the provided example to convert your own data. Follow the steps below:
 
 1.**Modify Dataset Splits**: The function `_split_paths()` determines the splits of the generated dataset (e.g. training, validation etc.).
 If your dataset defines a train vs validation split, please provide the corresponding filenames, e.g. 
-by pointing the `crawler` to the corresponding folders (like in the example). If your dataset does not define splits,
-sort all file names into the `train` split.
+by pointing the `crawler` to the corresponding folders (i.e. the data folder you copied from the robot machine above). 
+If your dataset does not define splits, put all file names into the `train` split.
 
 2.**Modify Dataset Conversion Code**: We currently assume a fixed dummy language instruction for the full dataset. 
 Please modify to use one or multiple appropriate instructions.

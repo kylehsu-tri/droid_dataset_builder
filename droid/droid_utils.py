@@ -100,7 +100,7 @@ class MP4Reader:
         # Return Data #
         data_dict = {}
 
-        if self.concatenate_images or 'stereo' not in self.serial_number:
+        if self.concatenate_images:
             data_dict["image"] = {self.serial_number: self._process_frame(frame)}
         else:
             single_width = frame.shape[1] // 2
