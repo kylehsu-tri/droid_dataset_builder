@@ -10,7 +10,7 @@ import wandb
 import tensorflow as tf
 
 WANDB_ENTITY = 'tri'
-WANDB_PROJECT = 'vis_droid_pick_up_can_target'
+WANDB_PROJECT = 'vis_droid'
 
 
 parser = argparse.ArgumentParser()
