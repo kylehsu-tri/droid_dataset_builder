@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 import wandb
 import tensorflow as tf
 
-WANDB_ENTITY = 'your_entity'
-WANDB_PROJECT = 'vis_rlds'
+WANDB_ENTITY = 'tri'
+WANDB_PROJECT = 'vis_droid_pick_up_can_target'
 
 
 parser = argparse.ArgumentParser()

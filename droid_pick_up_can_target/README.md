@@ -1,0 +1,1 @@
+Target "pick up can" data collected on 2024-06-24.

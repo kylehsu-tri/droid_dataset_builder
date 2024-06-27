@@ -4,14 +4,14 @@ This repo demonstrates how to convert an existing DROID dataset into RLDS format
 
 ## Installation
 
-First create a conda environment using the provided environment.yml file (use `environment_ubuntu.yml` or `environment_macos.yml` depending on the operating system you're using):
+First create a mamba environment using the provided environment.yml file (use `environment_ubuntu.yml` or `environment_macos.yml` depending on the operating system you're using):
 ```
-conda env create -f environment_ubuntu.yml
+mamba env create -f environment_ubuntu.yml
 ```
 
 Then activate the environment using:
 ```
-conda activate rlds_env
+mamba activate rlds_env
 ```
 
 If you want to manually create an environment, the key packages to install are `tensorflow`, 
