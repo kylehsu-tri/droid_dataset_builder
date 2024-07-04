@@ -14,7 +14,7 @@ from droid.tfds_utils import MultiThreadedDatasetBuilder
 LANGUAGE_INSTRUCTION = 'pick up can'
 
 # Modify to point to directory with raw DROID MP4 data
-DATA_PATH = "/home/ubuntu/data/droid_pick_up_can_target"
+DATA_PATH = "/home/ashwinbalakrishna/kylehsu/code/fix-droid/droid/data"
 
 # (180, 320) is the default resolution, modify if different resolution is desired
 IMAGE_RES = (180, 320)
@@ -24,7 +24,7 @@ def _generate_examples(paths) -> Iterator[Tuple[str, Any]]:
 
     def _resize_and_encode(image, size):
         image = Image.fromarray(image)
-        return np.array(image.resize(size, resample=Image.BICUBIC))
+        return np.array(image.resize(size, resample=Image.LANCZOS))
 
     def _parse_example(episode_path):
         h5_filepath = os.path.join(episode_path, 'trajectory.h5')
@@ -59,9 +59,17 @@ def _generate_examples(paths) -> Iterator[Tuple[str, Any]]:
 
                 episode.append({
                     'observation': {
-                        'exterior_image_1_left': obs['image'][f'{exterior_ids[0]}_left'][..., ::-1],
-                        'exterior_image_2_left': obs['image'][f'{exterior_ids[1]}_left'][..., ::-1],
-                        'wrist_image_left': obs['image'][f'{wrist_ids[0]}_left'][..., ::-1],
+                        # 'exterior_image_1_left': obs['image'][f'{exterior_ids[0]}_left'][..., ::-1],
+                        # 'exterior_image_2_left': obs['image'][f'{exterior_ids[1]}_left'][..., ::-1],
+                        # 'wrist_image_left': obs['image'][f'{wrist_ids[0]}_left'][..., ::-1],
+                        'combined_exterior_wrist_image_left': np.concatenate(
+                            [
+                                obs['image'][f'{exterior_ids[0]}_left'][..., ::-1],
+                                np.zeros((10, 320, 3), dtype=np.uint8),
+                                obs['image'][f'{wrist_ids[0]}_left'][..., ::-1],
+                            ],
+                            axis=0
+                        ),
                         'cartesian_position': obs['robot_state']['cartesian_position'],
                         'joint_position': obs['robot_state']['joint_positions'],
                         'gripper_position': np.array([obs['robot_state']['gripper_position']]),
@@ -122,23 +130,29 @@ class DroidPickUpCanTarget(MultiThreadedDatasetBuilder):
             features=tfds.features.FeaturesDict({
             'steps': tfds.features.Dataset({
                     'observation': tfds.features.FeaturesDict({
-                        'exterior_image_1_left': tfds.features.Image(
-                            shape=(*IMAGE_RES, 3),
+                        # 'exterior_image_1_left': tfds.features.Image(
+                        #     shape=(*IMAGE_RES, 3),
+                        #     dtype=np.uint8,
+                        #     encoding_format='jpeg',
+                        #     doc='Exterior camera 1 left viewpoint',
+                        # ),
+                        # 'exterior_image_2_left': tfds.features.Image(
+                        #     shape=(*IMAGE_RES, 3),
+                        #     dtype=np.uint8,
+                        #     encoding_format='jpeg',
+                        #     doc='Exterior camera 2 left viewpoint'
+                        # ),
+                        # 'wrist_image_left': tfds.features.Image(
+                        #     shape=(*IMAGE_RES, 3),
+                        #     dtype=np.uint8,
+                        #     encoding_format='jpeg',
+                        #     doc='Wrist camera RGB left viewpoint',
+                        # ),
+                        'combined_exterior_wrist_image_left': tfds.features.Image(
+                            shape=(2 * IMAGE_RES[0] + 10, IMAGE_RES[1], 3),
                             dtype=np.uint8,
                             encoding_format='jpeg',
-                            doc='Exterior camera 1 left viewpoint',
-                        ),
-                        'exterior_image_2_left': tfds.features.Image(
-                            shape=(*IMAGE_RES, 3),
-                            dtype=np.uint8,
-                            encoding_format='jpeg',
-                            doc='Exterior camera 2 left viewpoint'
-                        ),
-                        'wrist_image_left': tfds.features.Image(
-                            shape=(*IMAGE_RES, 3),
-                            dtype=np.uint8,
-                            encoding_format='jpeg',
-                            doc='Wrist camera RGB left viewpoint',
+                            doc='Combined exterior camera 1 and wrist camera left viewpoints',
                         ),
                         'cartesian_position': tfds.features.Tensor(
                             shape=(6,),
